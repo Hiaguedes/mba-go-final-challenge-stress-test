@@ -63,9 +63,11 @@ func ConcurrentRequests(input RequestsInputDTO) (RequestsOutputDTO, error) {
 	errors := make(chan error, input.Requests)
 	
 	setStatusCodes := make(map[int]int)
+	
 	var mu sync.Mutex // Protege o acesso concorrente ao map
 	var wg sync.WaitGroup
-
+	setStatusCodes[http.StatusOK] = 0
+	
 	start := time.Now()
 
 	// for pra criar o numero de goroutines
