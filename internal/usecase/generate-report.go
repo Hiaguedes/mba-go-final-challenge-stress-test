@@ -19,17 +19,17 @@ func NewGenerateReportUseCase() *GenerateReportUseCase {
 
 func (uc *GenerateReportUseCase) Execute(input GenerateReportInputDTO) (string, error) {
 	report := "\n-------------\n"
-	report += "Report:\n"
-	report += "Duration: " + fmt.Sprintf("%.2f", input.Duration) + " seconds\n\n"
+	report += "Relatório:\n"
+	report += "Duração: " + fmt.Sprintf("%.2f", input.Duration) + " segundos\n\n"
 	report += "HTTP Status Codes:\n"
-	report += "Number of status request: frequency counted\n"
+	report += "Número do HTTP Status Code: Frequencia de requisições com esse numero\n"
 	numberOfRequests := 0
 
 	for statusCode, count := range input.SetHTTPStatusCodes {
-		report += fmt.Sprintf("%d 			: %s\n", statusCode, strconv.Itoa(count) + " requests")
+		report += fmt.Sprintf("%d 			  : %s\n", statusCode, strconv.Itoa(count) + " requisições")
 		numberOfRequests += count
 	}
-	report += fmt.Sprintf("\nTotal Requests: %d\n", numberOfRequests)
+	report += fmt.Sprintf("\nNúmero total de requisições: %d\n", numberOfRequests)
 
 	return report, nil
 }
