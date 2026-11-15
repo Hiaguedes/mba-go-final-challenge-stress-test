@@ -1,7 +1,9 @@
 package usecase
 
 import (
+	"context"
 	"fmt"
+	"net"
 	"net/http"
 	"sync"
 	"time"
@@ -36,7 +38,18 @@ func  SendGetRequest(input RequestsInputDTO) (SingleRequestOutputDTO, error) {
 		return SingleRequestOutputDTO{}, err
 	}
 
-	client := &http.Client{}
+	dialer := &net.Dialer{
+	Timeout:   30 * time.Second,
+	KeepAlive: 30 * time.Second,
+}
+
+	client := &http.Client{
+			Transport: &http.Transport{
+		DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
+			return dialer.DialContext(ctx, "tcp4", addr)
+		},
+	},
+	}
 	resp, err := client.Do(req)
 	if err != nil {
 		fmt.Println("error on do", err)
