@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net"
 	"net/http"
+	"strings"
 	"sync"
 	"time"
 )
@@ -13,6 +14,7 @@ type RequestsInputDTO struct {
 	Url         string 
 	Requests    int
 	Concurrency int
+	Headers 	[]string
 }
 
 type SingleRequestOutputDTO struct {
@@ -38,13 +40,25 @@ func  SendGetRequest(input RequestsInputDTO) (SingleRequestOutputDTO, error) {
 		return SingleRequestOutputDTO{}, err
 	}
 
+
+	if len(input.Headers) >= 1 {
+		for _, h := range input.Headers {
+				parts := strings.SplitN(h, ":", 2) 
+			if len(parts) == 2 {
+				key := strings.TrimSpace(parts[0])
+				val := strings.TrimSpace(parts[1])
+				req.Header.Add(key, val)
+			}
+		}
+	}
+
 	dialer := &net.Dialer{
 	Timeout:   30 * time.Second,
 	KeepAlive: 30 * time.Second,
 }
 
 	client := &http.Client{
-			Transport: &http.Transport{
+		Transport: &http.Transport{
 		DialContext: func(ctx context.Context, network, addr string) (net.Conn, error) {
 			return dialer.DialContext(ctx, "tcp4", addr)
 		},

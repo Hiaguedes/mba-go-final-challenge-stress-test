@@ -35,5 +35,6 @@ func init() {
 	rootCmd.Flags().StringP("url", "u", "", "URL to stress test")
 	rootCmd.Flags().IntP("requests", "r", 1, "Number of requests to send")
 	rootCmd.Flags().IntP("concurrency", "c", 1, "Number of simultaneous requests to send")
+	rootCmd.Flags().StringArrayP("header", "H", []string{""}, "Header of the request (optional)")
 	rootCmd.MarkFlagRequired("url")
 }

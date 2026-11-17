@@ -14,6 +14,7 @@ func (h *RequestHandler) HandleRequests(cmd *cobra.Command, args []string) error
 	url := cmd.Flag("url").Value.String()
 	requests, err := cmd.Flags().GetInt("requests")
 	concurrency, err := cmd.Flags().GetInt("concurrency")
+	headers, err := cmd.Flags().GetStringArray("header")
 	if err != nil {
 		return fmt.Errorf("failed to get flag values: %v", err)
 	}
@@ -25,6 +26,7 @@ func (h *RequestHandler) HandleRequests(cmd *cobra.Command, args []string) error
 		Url: url,
 		Requests: requests,
 		Concurrency: concurrency,
+		Headers: headers,
 	}
 
 	res, err := reqs.Execute(inputDTO)
